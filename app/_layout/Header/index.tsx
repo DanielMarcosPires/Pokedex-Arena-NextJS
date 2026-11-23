@@ -4,27 +4,38 @@ import { DEFAULT_STYLE, TYPE_STYLES } from "@/app/_style/type_styles";
 
 interface HeaderProps {
   type?: string;
+  secondaryType?: string;
 }
 
-export default function Header({ type = "fire" }: HeaderProps) {
+export default function Header({ type = "grass", secondaryType="poison" }: HeaderProps) {
   const primaryStyle = TYPE_STYLES[type.toLowerCase()] ?? DEFAULT_STYLE;
+  const secStyle = secondaryType
+    ? (TYPE_STYLES[secondaryType.toLowerCase()] ?? DEFAULT_STYLE)
+    : null;
+
+  const backgroundImage = secStyle
+    ? `linear-gradient(90deg, ${primaryStyle.gradientHex}33, ${secStyle.gradientHex}33)`
+    : undefined;
 
   return (
     <header
-      className={`text-2xl flex justify-between shadow-black shadow-2xl border-b-8 px-8 ${primaryStyle.cardBg}`}
+      className={`text-2xl flex items-center justify-between shadow-black shadow-2xl  px-8 ${primaryStyle.cardBg}`}
       style={{
-        borderColor: primaryStyle.gradientHex,
+        borderBottomColor: secStyle
+          ? secStyle.gradientHex
+          : primaryStyle.gradientHex,
+        backgroundImage,
       }}
     >
-      <h2 className="py-4 font-semibold">PokeArena</h2>
-      <Nav className="flex space-x-4">
-        <Link className="w-full py-4 hover:underline" href="/">
+      <h2 className="py-4 font-semibold whitespace-nowrap">PokeArena</h2>
+      <Nav className="flex items-center space-x-4">
+        <Link className="py-4 hover:underline whitespace-nowrap shrink-0" href="/">
           Battle
         </Link>
-        <Link className="w-full py-4 hover:underline" href="/">
+        <Link className="py-4 hover:underline whitespace-nowrap shrink-0" href="/">
           Game
         </Link>
-        <Link className="w-full py-4 hover:underline" href="/about">
+        <Link className="py-4 hover:underline whitespace-nowrap shrink-0" href="/about">
           About
         </Link>
       </Nav>

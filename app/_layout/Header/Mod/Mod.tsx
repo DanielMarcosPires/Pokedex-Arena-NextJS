@@ -12,7 +12,7 @@ export default function Nav({ children, ...props }: ComponentProps<'nav'>) {
     useEffect(() => {
         setWidth(window.innerWidth)
 
-        window.addEventListener('resize',()=>setWidth(window.innerWidth));
+        window.addEventListener('resize', () => setWidth(window.innerWidth));
     }, [])
 
     if (425 < width) {
@@ -23,17 +23,11 @@ export default function Nav({ children, ...props }: ComponentProps<'nav'>) {
 
     return (
         <>
-            <button onClick={() => setIsOpen(isOpen)}>
+            <button onClick={() => setIsOpen(!isOpen)}>
                 <BiMenu size={45} />
             </button>
             {isOpen && (
                 <Menu onClick={() => setIsOpen(!isOpen)}>
-                    <div className="flex justify-between w-full">
-                        <h2 className="py-4">Menu:</h2>
-                        <button onClick={() => setIsOpen(!isOpen)}>
-                            <CgClose size={45} />
-                        </button>
-                    </div>
                     {children}
                 </Menu>
             )
