@@ -30,7 +30,7 @@ export default function Moves() {
 
   return (
     <div className="py-6 space-y-6">
-      <h3 className="text-2xl font-semibold">Movimentos:</h3>
+      <h3 className="text-2xl font-semibold">Moves:</h3>
 
       <div className="flex flex-wrap gap-8 justify-between">
           {categorizedMoves.map((group) => (

@@ -34,7 +34,7 @@ export default function Stats() {
 
   return (
     <div className="py-10 space-y-3 flex-1">
-      <h3 className="text-2xl font-semibold">Stats do Pokemon:</h3>
+      <h3 className="text-2xl font-semibold">Stats:</h3>
 
       <ul className="space-y-2.5">
         {statItems.map(({ label, value }) => {
