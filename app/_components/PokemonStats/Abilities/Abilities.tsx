@@ -47,61 +47,71 @@ export default function Abilities() {
 
   if (!pokemon) return null;
 
-  async function handleToggleAbility(ability: string) {
-    if (expandedAbility === ability) {
+  async function handleToggleAbility(abilityName: string) {
+    if (expandedAbility === abilityName) {
       setExpandedAbility(null);
       return;
     }
 
-    setExpandedAbility(ability);
+    setExpandedAbility(abilityName);
 
-    if (descriptions[ability]) return;
+    if (descriptions[abilityName]) return;
 
-    setLoadingAbility(ability);
+    setLoadingAbility(abilityName);
     try {
-      const res = await fetch(`https://pokeapi.co/api/v2/ability/${ability}`);
+      const res = await fetch(`https://pokeapi.co/api/v2/ability/${abilityName}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       const description = extractAbilityDescription(data);
 
-      setDescriptions((prev) => ({ ...prev, [ability]: description }));
+      setDescriptions((prev) => ({ ...prev, [abilityName]: description }));
     } catch {
       setDescriptions((prev) => ({
         ...prev,
-        [ability]: "Não foi possível carregar a descrição.",
+        [abilityName]: "Não foi possível carregar a descrição.",
       }));
     } finally {
-      setLoadingAbility((prev) => (prev === ability ? null : prev));
+      setLoadingAbility((prev) => (prev === abilityName ? null : prev));
     }
   }
 
   return (
-    <div className="flex-1 space-y-3">
-      <h3 className="text-2xl font-semibold tracking-wide">Abilities:</h3>
+    <div className="flex-1 px-5 space-y-3">
+      <h3 className="text-2xl font-semibold tracking-wide">Habilidades:</h3>
 
       <ul className="flex flex-col md:flex-row gap-3">
         {pokemon.abilities.map((ability) => {
-          const isOpen = expandedAbility === ability;
-          const isLoading = loadingAbility === ability;
+          const isOpen = expandedAbility === ability.name;
+          const isLoading = loadingAbility === ability.name;
 
           return (
             <li
-              key={ability}
+              key={ability.name}
               style={surfaceStyle}
-              className={`w-full rounded-xl overflow-hidden border border-white/10 transition-colors ${cardClassName}`}
+              className={`w-full rounded-xl overflow-hidden border transition-colors ${
+                ability.isHidden ? "border-amber-400/40" : "border-white/10"
+              } ${cardClassName}`}
             >
               <button
                 type="button"
-                onClick={() => handleToggleAbility(ability)}
+                onClick={() => handleToggleAbility(ability.name)}
                 aria-expanded={isOpen}
                 className="w-full px-3.5 py-3 flex items-center justify-between gap-2 text-lg text-white/90 hover:bg-white/10 transition"
               >
-                <span className="capitalize font-medium text-left">
-                  {ability.replaceAll("-", " ")}
+                <span className="inline-flex items-center gap-2 flex-wrap text-left">
+                  <span className="capitalize font-medium">
+                    {ability.name.replaceAll("-", " ")}
+                  </span>
+
+                  {ability.isHidden && (
+                    <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-200 border border-amber-400/30 text-xs font-medium">
+                      Oculta
+                    </span>
+                  )}
                 </span>
 
                 <span
-                  className={`text-xs opacity-75 transition-transform duration-200 ${
+                  className={`text-xs opacity-75 transition-transform duration-200 shrink-0 ${
                     isOpen ? "rotate-180" : ""
                   }`}
                 >
@@ -110,11 +120,11 @@ export default function Abilities() {
               </button>
 
               {isOpen && (
-                <div className="px-3.5 py-2.5 bg-black/25 border-t border-white/10 text-lg text-white/80 leading-relaxed">
+                <div className="px-3.5 py-2.5 bg-black/25 border-t border-white/10 text-sm text-white/80 leading-relaxed">
                   {isLoading ? (
                     <p className="opacity-70">Carregando descrição...</p>
                   ) : (
-                    <p>{descriptions[ability]}</p>
+                    <p>{descriptions[ability.name]}</p>
                   )}
                 </div>
               )}

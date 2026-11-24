@@ -1,12 +1,12 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import { PokemonMoveSummary } from "../_classes/(privateClass)/Pokemon";
+import { PokemonAbilitySummary, PokemonMoveSummary } from "../_classes/(privateClass)/Pokemon";
 
 export interface PokemonInfoData {
   name: string;
   types: string[];
-  abilities: string[];
+  abilities: PokemonAbilitySummary[];
   moves?: PokemonMoveSummary[];
   description?: string;
   sprite?: string;

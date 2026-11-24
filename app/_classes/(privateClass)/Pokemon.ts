@@ -7,6 +7,11 @@ export interface PokemonStats {
   speed: number;
 }
 
+export interface PokemonAbilitySummary {
+  name: string;
+  isHidden: boolean;
+}
+
 export interface PokeApiStatItem {
   base_stat: number;
   effort: number;
@@ -115,7 +120,7 @@ export class Pokemon {
   public readonly serialId: string;
   public readonly name: string;
   public readonly types: string[];
-  public readonly abilities: string[];
+  public readonly abilities: PokemonAbilitySummary[];
   public readonly moves: PokemonMoveSummary[];
   public readonly stats: PokemonStats;
   private readonly sprite: Sprites;
@@ -124,7 +129,10 @@ export class Pokemon {
     this.serialId = String(pokemon.id);
     this.name = pokemon.name;
     this.types = pokemon.types.map(({ type }) => type.name);
-    this.abilities = pokemon.abilities.map((item) => item.ability.name);
+    this.abilities = pokemon.abilities.map((item) => ({
+      name: item.ability.name,
+      isHidden: item.is_hidden,
+    }));
     this.moves = normalizeMoves(pokemon.moves);
     this.stats = normalizeStats(pokemon.stats);
     this.sprite = pokemon.sprites;
