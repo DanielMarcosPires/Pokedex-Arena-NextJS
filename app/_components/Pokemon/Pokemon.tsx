@@ -38,7 +38,8 @@ export async function Pokemon() {
           types: pokemon.types,
           abilities: pokemon.abilities,
           sprite: ``,
-          stats: pokemon.stats
+          stats: pokemon.stats,
+          moves:pokemon.moves
         }}
       />
       <div className="flex justify-center flex-col sm:flex-row w-1/2">

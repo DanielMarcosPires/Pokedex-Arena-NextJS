@@ -1,21 +1,23 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
+import { PokemonMoveSummary } from "../_classes/(privateClass)/Pokemon";
 
 export interface PokemonInfoData {
   name: string;
   types: string[];
   abilities: string[];
+  moves?: PokemonMoveSummary[];
   description?: string;
   sprite?: string;
   stats: {
-    hp: number,
-    attack: number,
-    defense: number,
-    specialAttack: number,
-    specialDefense: number,
-    speed: number
-  }
+    hp: number;
+    attack: number;
+    defense: number;
+    specialAttack: number;
+    specialDefense: number;
+    speed: number;
+  };
 }
 
 interface PokemonThemeContextType {

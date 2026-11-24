@@ -16,6 +16,32 @@ export interface PokeApiStatItem {
   };
 }
 
+export interface PokeApiMoveVersionDetail {
+  level_learned_at: number;
+  move_learn_method: {
+    name: string;
+    url: string;
+  };
+  version_group: {
+    name: string;
+    url: string;
+  };
+}
+
+export interface PokeApiMoveItem {
+  move: {
+    name: string;
+    url: string;
+  };
+  version_group_details?: PokeApiMoveVersionDetail[];
+}
+
+export interface PokemonMoveSummary {
+  name: string;
+  levelLearnedAt: number;
+  learnMethod: string;
+}
+
 export type Sprites = {
   back_default: string;
   back_shiny: string;
@@ -51,6 +77,7 @@ export interface PokeApiPokemonResponse {
     is_hidden: boolean;
     slot: number;
   }>;
+  moves: PokeApiMoveItem[];
   stats: PokeApiStatItem[] | PokemonStats;
   sprites: Sprites;
 }
@@ -72,11 +99,24 @@ function normalizeStats(stats: PokeApiStatItem[] | PokemonStats): PokemonStats {
   };
 }
 
+function normalizeMoves(moves: PokeApiMoveItem[] = []): PokemonMoveSummary[] {
+  return moves.map((item) => {
+    const latestDetail = item.version_group_details?.at(-1);
+
+    return {
+      name: item.move.name,
+      levelLearnedAt: latestDetail?.level_learned_at ?? 0,
+      learnMethod: latestDetail?.move_learn_method.name ?? "unknown",
+    };
+  });
+}
+
 export class Pokemon {
   public readonly serialId: string;
   public readonly name: string;
   public readonly types: string[];
   public readonly abilities: string[];
+  public readonly moves: PokemonMoveSummary[];
   public readonly stats: PokemonStats;
   private readonly sprite: Sprites;
 
@@ -85,6 +125,7 @@ export class Pokemon {
     this.name = pokemon.name;
     this.types = pokemon.types.map(({ type }) => type.name);
     this.abilities = pokemon.abilities.map((item) => item.ability.name);
+    this.moves = normalizeMoves(pokemon.moves);
     this.stats = normalizeStats(pokemon.stats);
     this.sprite = pokemon.sprites;
   }
