@@ -14,7 +14,7 @@ export function PokemonStats() {
 
   return (
     <div
-      className={`w-full border-t-2 z-20 p-5 text-white transition-colors duration-300 ${cardClassName}`}
+      className={`lg:flex w-full border-t-2 z-20 p-5 text-white transition-colors duration-300 ${cardClassName}`}
       style={surfaceStyle}
     >
       <Abilities />

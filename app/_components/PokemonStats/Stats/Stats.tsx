@@ -33,7 +33,7 @@ export default function Stats() {
   ] as const;
 
   return (
-    <div className="py-10 space-y-3">
+    <div className="py-10 space-y-3 flex-1">
       <h3 className="text-2xl font-semibold">Stats do Pokemon:</h3>
 
       <ul className="space-y-2.5">
@@ -44,9 +44,9 @@ export default function Stats() {
             <li key={label} className="grid grid-cols-[90px_44px_1fr] items-center gap-3">
               <span className="text-lg opacity-80">{label}</span>
               <span className="text-lg font-mono font-bold text-right">{value}</span>
-              <div className="h-2.5 w-full rounded-full bg-white/15 overflow-hidden">
+              <div className="w-full rounded-full bg-white/15 overflow-hidden">
                 <div
-                  className="h-full rounded-full transition-[width] duration-300 ease-out"
+                  className="h-full rounded-full border-2 py-1.5 shadow-2xl border-black transition-[width] duration-300 ease-out"
                   style={{
                     width: `${percent}%`,
                     backgroundColor: barColor,

@@ -15,7 +15,11 @@ export async function getPokemonList(limit = 151, offset = 0) {
     });
 }
 
-export async function getPokemonInfo(name = "1") {
+export async function getPokemonInfo(name = "Mightyena") {
+    const { data } = await api.get(`/pokemon/${name}`);
+    return data;
+}
+export async function searchPokemonInfo(name = "1") {
     const { data } = await api.get(`/pokemon/${name}`);
     return data;
 }

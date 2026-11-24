@@ -13,17 +13,17 @@ export default function Abilities() {
     });
 
     return (
-        <>
+        <div className="flex-1 px-5">
             <h3 className="text-2xl font-semibold tracking-wide">
                 Habilidades:
             </h3>
-            <ul className="flex flex-wrap gap-4">
+            <ul className="flex flex-wrap md:flex-nowrap gap-4">
                 {pokemon?.abilities.map((ability) => (
                     <li key={ability} className={`mt-2 w-full text-lg text-white/80 p-2 rounded-lg`} style={surfaceStyle}>
                         {ability.toUpperCase()}
                     </li>
                 ))}
             </ul>
-        </>
+        </div>
     )
 }

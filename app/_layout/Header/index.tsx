@@ -6,13 +6,13 @@ import { useTypeTheme } from "@/app/hook/useTypeTheme";
 import { usePokemonTheme } from "@/app/context/pokemonThemeContext";
 
 export default function Header() {
-  const { types } = usePokemonTheme();
+  const { types,pokemon } = usePokemonTheme();
 
   const { cardClassName, surfaceStyle } = useTypeTheme({
     primaryType: types[0],
     secondaryType: types[1],
   });
-
+  console.log(pokemon)
   return (
     <header
       className={`text-2xl flex items-center justify-between shadow-lg z-10 px-8 transition-colors duration-500 ${cardClassName}`}
@@ -20,9 +20,6 @@ export default function Header() {
     >
       <h2 className="py-4 font-medium whitespace-nowrap">PokeArena</h2>
       <Nav className="flex items-center space-x-4">
-        <Link className="py-4 px-5 rounded-lg hover:underline whitespace-nowrap shrink-0" href="/">
-          Battle
-        </Link>
         <Link className="py-4 px-5 rounded-lg hover:underline whitespace-nowrap shrink-0" href="/">
           Game
         </Link>
