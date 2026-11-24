@@ -22,10 +22,10 @@ export default function ThemeShell({ children }: { children: React.ReactNode }) 
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col bg-zinc-950 text-white transition-colors duration-300"
-      style={{ backgroundImage: pageBackground }}
+      className="min-h-screen w-full flex flex-col"
+      style={{ backgroundImage: pageBackground}}
     >
-      <Header type={primaryType} secondaryType={secondaryType} />
+      <Header/>
       <main className="flex-1 flex flex-col">{children}</main>
     </div>
   );

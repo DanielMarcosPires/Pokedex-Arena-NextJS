@@ -9,7 +9,7 @@ export const api = axios.create({
     },
 });
 
-export async function getPokemonList(limit = 20, offset = 0) {
+export async function getPokemonList(limit = 151, offset = 0) {
     return api.get("/pokemon", {
         params: { limit, offset },
     });

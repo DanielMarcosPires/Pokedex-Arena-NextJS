@@ -1,41 +1,32 @@
+"use client";
+
 import Link from "next/link";
-import Nav from "./Mod/Mod";
-import { DEFAULT_STYLE, TYPE_STYLES } from "@/app/_style/type_styles";
+import Nav from "../../_components/Nav/Nav";
+import { useTypeTheme } from "@/app/hook/useTypeTheme";
+import { usePokemonTheme } from "@/app/context/pokemonThemeContext";
 
-interface HeaderProps {
-  type?: string;
-  secondaryType?: string;
-}
+export default function Header() {
+  const { types } = usePokemonTheme();
 
-export default function Header({ type = "grass", secondaryType="poison" }: HeaderProps) {
-  const primaryStyle = TYPE_STYLES[type.toLowerCase()] ?? DEFAULT_STYLE;
-  const secStyle = secondaryType
-    ? (TYPE_STYLES[secondaryType.toLowerCase()] ?? DEFAULT_STYLE)
-    : null;
-
-  const backgroundImage = secStyle
-    ? `linear-gradient(90deg, ${primaryStyle.gradientHex}33, ${secStyle.gradientHex}33)`
-    : undefined;
+  const { cardClassName, surfaceStyle } = useTypeTheme({
+    primaryType: types[0],
+    secondaryType: types[1],
+  });
 
   return (
     <header
-      className={`text-2xl flex items-center justify-between shadow-black shadow-2xl  px-8 ${primaryStyle.cardBg}`}
-      style={{
-        borderBottomColor: secStyle
-          ? secStyle.gradientHex
-          : primaryStyle.gradientHex,
-        backgroundImage,
-      }}
+      className={`text-2xl flex items-center justify-between shadow-lg z-10 px-8 transition-colors duration-500 ${cardClassName}`}
+       style={surfaceStyle}
     >
-      <h2 className="py-4 font-semibold whitespace-nowrap">PokeArena</h2>
+      <h2 className="py-4 font-medium whitespace-nowrap">PokeArena</h2>
       <Nav className="flex items-center space-x-4">
-        <Link className="py-4 hover:underline whitespace-nowrap shrink-0" href="/">
+        <Link className="py-4 px-5 rounded-lg hover:underline whitespace-nowrap shrink-0" href="/">
           Battle
         </Link>
-        <Link className="py-4 hover:underline whitespace-nowrap shrink-0" href="/">
+        <Link className="py-4 px-5 rounded-lg hover:underline whitespace-nowrap shrink-0" href="/">
           Game
         </Link>
-        <Link className="py-4 hover:underline whitespace-nowrap shrink-0" href="/about">
+        <Link className="py-4 px-5 rounded-lg hover:underline whitespace-nowrap shrink-0" href="/about">
           About
         </Link>
       </Nav>

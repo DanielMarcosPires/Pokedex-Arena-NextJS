@@ -3,16 +3,14 @@
 import { ComponentProps, useEffect, useState } from "react"
 import Menu from "../Menu/Modal";
 import { BiMenu } from "react-icons/bi";
-import { CgClose } from "react-icons/cg";
 
 export default function Nav({ children, ...props }: ComponentProps<'nav'>) {
     const [width, setWidth] = useState<number>(0);
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
-        setWidth(window.innerWidth)
-
         window.addEventListener('resize', () => setWidth(window.innerWidth));
+        setWidth(window.innerWidth)
     }, [])
 
     if (425 < width) {

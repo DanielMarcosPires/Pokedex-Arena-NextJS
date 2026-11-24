@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { PokemonThemeProvider } from "./context/pokemonThemeContext";
-import ThemeShell from "./_layout/ThemeShell/ThemeShell";
+import { PokemonThemeProvider } from "../context/pokemonThemeContext";
+import ThemeShell from "../_layout/ThemeShell/ThemeShell";
 
 
 const geistSans = Geist({
@@ -31,7 +31,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-zinc-950 text-white">
-        <PokemonThemeProvider initialTypes={["grass"]}>
+        <PokemonThemeProvider initialTypes={["normal"]}>
           <ThemeShell>{children}</ThemeShell>
         </PokemonThemeProvider>
       </body>
