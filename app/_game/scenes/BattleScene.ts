@@ -427,7 +427,9 @@ export class BattleScene implements Scene {
         }
 
         next.execute();
-        if (this.phase === "finished" || this.phase === "switching") return;
+
+        const phaseAfterStep = this.phase as BattlePhase;
+        if (phaseAfterStep === "finished" || phaseAfterStep === "switching") return;
 
         this.stepTimer = next.duration;
     }
