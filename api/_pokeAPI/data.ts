@@ -19,7 +19,24 @@ export async function getPokemonInfo(name = "Mightyena") {
     const { data } = await api.get(`/pokemon/${name}`);
     return data;
 }
+
 export async function searchPokemonInfo(name = "1") {
     const { data } = await api.get(`/pokemon/${name}`);
+    return data;
+}
+
+export async function getMoveInfo(nameOrUrl: string | number) {
+    const target = String(nameOrUrl).toLowerCase();
+    const { data } = target.startsWith("http")
+        ? await axios.get(target)
+        : await api.get(`/move/${target}`);
+    return data;
+}
+
+export async function getAbilityInfo(nameOrUrl: string | number) {
+    const target = String(nameOrUrl).toLowerCase();
+    const { data } = target.startsWith("http")
+        ? await axios.get(target)
+        : await api.get(`/ability/${target}`);
     return data;
 }
