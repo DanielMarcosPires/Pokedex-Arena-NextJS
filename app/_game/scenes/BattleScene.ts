@@ -209,7 +209,7 @@ export class BattleScene implements Scene {
         this.statusMessage = `${target.name} entrou em campo!`;
         this.phase = "executing";
         this.stepQueue = [
-            { duration: 0.6, execute: () => {} },
+            { duration: 0.6, execute: () => { } },
             ...this.createAttackSteps("enemy", enemyMove),
             {
                 duration: 0.2,
@@ -475,12 +475,14 @@ export class BattleScene implements Scene {
     update(dt: number): void {
         this.tickTimers(dt);
 
-        if (this.phase === "choosing") {
+        const currentPhase: BattlePhase = this.phase;
+
+        if (currentPhase === "choosing") {
             this.handleChoosingInput(this.engine.input);
             return;
         }
 
-        if (this.phase === "executing" && this.stepTimer > 0) {
+        if (currentPhase === "executing" && this.stepTimer > 0) {
             this.stepTimer = Math.max(0, this.stepTimer - dt);
             if (this.stepTimer === 0) {
                 this.runNextStep();
