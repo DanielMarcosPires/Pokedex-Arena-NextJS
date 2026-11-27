@@ -20,7 +20,7 @@ export default function Header() {
     >
       <h2 className="py-4 font-medium whitespace-nowrap">PokeArena</h2>
       <Nav className="flex items-center space-x-4">
-        <Link className="py-4 px-5 rounded-lg hover:underline whitespace-nowrap shrink-0" href="/">
+        <Link className="py-4 px-5 rounded-lg hover:underline whitespace-nowrap shrink-0" href="/Game">
           Game
         </Link>
         <Link className="py-4 px-5 rounded-lg hover:underline whitespace-nowrap shrink-0" href="/about">
