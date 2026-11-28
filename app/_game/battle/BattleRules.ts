@@ -86,3 +86,45 @@ export function resolveAttack(
         effectiveness,
     };
 }
+
+export const MAX_STAT_STAGE = 5;
+
+export function getNextStatStage(currentStage: number, delta: number): number {
+    return Math.max(0, Math.min(MAX_STAT_STAGE, currentStage + delta));
+}
+
+export function getMoveEffectiveness(
+    moveType: string,
+    defenderTypes: string[]
+): number {
+    if (!moveType || !defenderTypes.length) return 1;
+    return getTypeEffectiveness(
+        moveType as PokemonType,
+        defenderTypes as PokemonType[]
+    );
+}
+
+export function getEffectivenessBadge(multiplier: number): {
+    label: string;
+    className: string;
+} | null {
+    if (multiplier >= 2) {
+        return {
+            label: multiplier >= 4 ? "SUPER EFETIVO (4x)" : "SUPER EFETIVO (2x)",
+            className: "border-emerald-400/60 bg-emerald-500/20 text-emerald-200",
+        };
+    }
+    if (multiplier === 0) {
+        return {
+            label: "SEM EFEITO (0x)",
+            className: "border-slate-600 bg-slate-800/80 text-slate-400",
+        };
+    }
+    if (multiplier < 1) {
+        return {
+            label: `POUCO EFETIVO (${multiplier}x)`,
+            className: "border-amber-500/40 bg-amber-500/10 text-amber-200/90",
+        };
+    }
+    return null;
+}

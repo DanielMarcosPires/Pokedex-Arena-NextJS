@@ -1,14 +1,19 @@
 "use client";
 
+
 import { useEffect, useRef, useState } from "react";
 import { Engine } from "@/app/_engine/core/Engine";
 import {
-    BattleScene,
+    getMoveEffectiveness,
+    getEffectivenessBadge,
     type BattleMove,
-    type PartySlotSummary,
-} from "@/app/_game/scenes/BattleScene";
+} from "@/app/_game/battle/BattleRules";
 import { toBattleCombatant } from "@/app/_game/battle/BattleAdapter";
 import { ObjectPokemon } from "@/app/_classes/objectPokemon";
+import { PartySlotSummary, BattleScene } from "@/app/_game/scenes/BattleScene";
+import { getMoveTypeTheme } from "@/app/_game/battle/Moves/MoveStyles";
+
+
 
 interface HudState {
     phase: "choosing" | "executing" | "switching" | "finished";
@@ -18,6 +23,7 @@ interface HudState {
     playerMaxHp: number;
     enemyHp: number;
     enemyMaxHp: number;
+    enemyTypes: string[];
     playerParty: PartySlotSummary[];
     enemyParty: PartySlotSummary[];
     message: string;
@@ -31,9 +37,10 @@ const INITIAL_HUD: HudState = {
     playerMaxHp: 100,
     enemyHp: 100,
     enemyMaxHp: 100,
+    enemyTypes: [],
     playerParty: [],
     enemyParty: [],
-    message: "A carregar batalha...",
+    message: "",
 };
 
 function toFrontSpriteUrl(url?: string): string {
@@ -75,6 +82,7 @@ function mergeHudState(prev: HudState, payload: unknown): HudState {
         enemyMaxHp: typeof data.enemyMaxHp === "number" ? data.enemyMaxHp : prev.enemyMaxHp,
         playerParty: Array.isArray(data.playerParty) ? data.playerParty : prev.playerParty,
         enemyParty: Array.isArray(data.enemyParty) ? data.enemyParty : prev.enemyParty,
+        enemyTypes: Array.isArray(data.enemyTypes) ? data.enemyTypes : prev.enemyTypes,
         message: typeof data.message === "string" ? data.message : prev.message,
     };
 }
@@ -268,32 +276,68 @@ export function GameCanvas() {
 
                 <section
                     aria-label="Seleção de golpes"
-                    className="flex flex-col gap-3 rounded border border-slate-800 bg-slate-900/80 p-4 sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-3 rounded border border-slate-800 bg-slate-900/90 p-4 sm:flex-row sm:items-stretch sm:justify-between"
                 >
-                    <ul className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-                        {hud.moves.map((move, index) => (
-                            <li key={move.id} className="w-full">
-                                <button
-                                    type="button"
-                                    disabled={hud.phase !== "choosing"}
-                                    aria-pressed={index === hud.selectedMoveIndex}
-                                    onClick={() => sceneRef.current?.selectMove(index)}
-                                    className={getMoveButtonClass(index === hud.selectedMoveIndex)}
-                                >
-                                    <span className="truncate">{move.name}</span>
-                                    <span className="ml-3 shrink-0 text-sm font-medium text-slate-400">
-                                        PWR {move.power}
-                                    </span>
-                                </button>
-                            </li>
-                        ))}
+                    <ul className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+                        {hud.moves.map((move, index) => {
+                            const isSelected = index === hud.selectedMoveIndex;
+                            const multiplier = getMoveEffectiveness(move.type, hud.enemyTypes);
+                            const effBadge = getEffectivenessBadge(multiplier);
+                            const typeTheme = getMoveTypeTheme(move.type);
+
+                            return (
+                                <li key={move.id} className="w-full">
+                                    <button
+                                        type="button"
+                                        disabled={hud.phase !== "choosing"}
+                                        aria-pressed={isSelected}
+                                        onClick={() => sceneRef.current?.selectMove(index)}
+                                        className={`flex min-h-24 w-full flex-col justify-between gap-2 rounded-md border p-4 text-left text-slate-100 transition disabled:cursor-not-allowed disabled:opacity-50 ${typeTheme.border
+                                            } ${isSelected ? typeTheme.cardSelectedBg : typeTheme.cardBg} ${isSelected
+                                                ? "ring-2 ring-sky-400 shadow-[0_0_0_1px_rgba(56,189,248,0.35)]"
+                                                : ""
+                                            }`}
+                                    >
+                                        <div className="flex w-full items-start justify-between gap-2">
+                                            <div className="min-w-0">
+                                                <div className="truncate text-base font-bold tracking-tight">
+                                                    {move.name}
+                                                </div>
+                                                <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                                                    <span
+                                                        className={`rounded border px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider ${typeTheme.badge}`}
+                                                    >
+                                                        {move.type || "normal"}
+                                                    </span>
+                                                    {effBadge && (
+                                                        <span
+                                                            className={`rounded border px-2 py-0.5 text-[10px] font-bold tracking-wide ${effBadge.className}`}
+                                                        >
+                                                            {effBadge.label}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <span className="shrink-0 rounded bg-slate-950/75 px-2.5 py-1 text-xs font-semibold text-slate-200">
+                                                PWR {move.power}
+                                            </span>
+                                        </div>
+
+                                        <p className="line-clamp-2 text-xs leading-relaxed text-slate-200/90">
+                                            {move.description || "Golpe sem descrição disponível."}
+                                        </p>
+                                    </button>
+                                </li>
+                            );
+                        })}
                     </ul>
 
                     {hud.phase === "finished" && (
                         <button
                             type="button"
                             onClick={() => sceneRef.current?.restart()}
-                            className="min-h-16 shrink-0 rounded-md border border-emerald-500/60 bg-emerald-600/20 px-6 py-3.5 text-base font-semibold text-emerald-200 transition hover:bg-emerald-600/30"
+                            className="min-h-24 shrink-0 rounded-md border border-emerald-500/60 bg-emerald-600/20 px-6 py-4 text-base font-semibold text-emerald-200 transition hover:bg-emerald-600/30"
                         >
                             Jogar novamente
                         </button>
